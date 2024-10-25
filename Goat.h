@@ -26,7 +26,7 @@ public:
     void set_color(string c)        { color = c; }
     string get_color() const        { return color; }
 
-    // write overloaded < operator for the std::list
+    // Overloaded < operator for use in std::set (compares by name)
     bool operator < (const Goat &other) const{
         return name < other.name;
     }
