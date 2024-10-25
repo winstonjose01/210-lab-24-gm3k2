@@ -129,7 +129,7 @@ void display_trip (set<Goat> trip){
 // arguments: set of <Goat> objects, string array of names, string array of colors
 // retrusn: No returns
 void delete_goat (set<Goat> &trip, int selection){
-    // Remove a goat from the set
+    // Remove a goat from the set based on index
     int k = 1;
     for (auto it = trip.begin(); it != trip.end(); ++it){
         if (k == selection){
