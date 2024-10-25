@@ -6,7 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
-#include <list>
+#include <set>
 #include "Goat.h"
 using namespace std;
 
@@ -14,10 +14,10 @@ using namespace std;
 const int SZ_NAMES = 200, SZ_COLORS = 25, MAX_AGE = 20, MIN = 5, MAX = 20;
 
 // F
-int select_goat(list<Goat> trip); // Function to select a goat based on user input
-void delete_goat(list<Goat> &trip, int i); // Function to delete a goat from the list
-void add_goat(list<Goat> &trip, string [], string []); // Functio to add a goat to the list
-void display_trip(list<Goat> trip);     // Function to display the current goats on the trip
+int select_goat(set<Goat> trip); // Function to select a goat based on user input
+void delete_goat(set<Goat> &trip, int i); // Function to delete a goat from the set
+void add_goat(set<Goat> &trip, string [], string []); // Function to add a goat to the set
+void display_trip(set<Goat> trip);     // Function to display the current goats on the trip
 int main_menu();                    
 
 int main() {
@@ -37,18 +37,18 @@ int main() {
     while (fin1 >> colors[i++]); // Reading all colors from the file into the array
     fin1.close();
 
-    list <Goat> goat_gang;  // A list to store Goat objects 
+    set <Goat> goat_gang;  // A set to store Goat objects 
 
     // Randomly generate an initial set of goats with random names, ages, and colors
     for (int i = 0; i < (MIN + rand() % (MAX-MIN + 1)); i++){
-        goat_gang.push_back(Goat(names[rand() % SZ_NAMES], rand() % (MAX_AGE+1), colors[rand() % SZ_COLORS]));
+        goat_gang.emplace(names[rand() % SZ_NAMES], rand() % (MAX_AGE+1), colors[rand() % SZ_COLORS]);
     }
 
     // Main loop to handle user input and perform corresponding actions
     while (true){
         choice = main_menu(); // Display the menu and get user choice
         switch (choice){
-            case 1: // Add a new goat to the list and display updated list
+            case 1: // Add a new goat to the set and display updated set
                     add_goat(goat_gang, names, colors);
                     display_trip (goat_gang);
                 break;
@@ -105,17 +105,17 @@ int main_menu(){
     }
 
 // Function to add a randomly generated goat to the trip
-// arguments: list of <Goat> objects, string array of names, string array of colors
+// arguments: set of <Goat> objects, string array of names, string array of colors
 // retrusn: No returns
-void add_goat(list<Goat> &trip, string n[], string c[]){
+void add_goat(set<Goat> &trip, string n[], string c[]){
     // Add a goat with a random name, age (0 to MAX_AGE), and color
-    trip.push_back(Goat(n[rand() % SZ_NAMES], rand() % (MAX_AGE+1), c[rand() % SZ_COLORS]));
+    trip.emplace(n[rand() % SZ_NAMES], rand() % (MAX_AGE+1), c[rand() % SZ_COLORS]);
 }
 
 // Function to display the main menu and get user's choice
 // arguments: None
 // returns: Returns the choice selected by the user
-void display_trip (list<Goat> trip){
+void display_trip (set<Goat> trip){
     cout << "\tThere are " << trip.size() << " goats on this trip:" << endl;
     int i = 1;
     for (auto goat : trip){
@@ -123,36 +123,25 @@ void display_trip (list<Goat> trip){
     }
 }
 
-// Function to delete a goat from the list based on its position
-// arguments: list of <Goat> objects, string array of names, string array of colors
+// Function to delete a goat from the set based on its position
+// arguments: set of <Goat> objects, string array of names, string array of colors
 // retrusn: No returns
-void delete_goat (list<Goat> &trip, int selection){
-    int size_trip = trip.size();
-     // Remove the first goat
-    if (selection == 1)
-        trip.pop_front();
-
-    // Remove the last goat
-    else if (selection == size_trip)
-        trip.pop_back();
-
-    // Remove a goat in the middle of the list
-    else{
-        int k = 1;
-        for (auto it = trip.begin(); it != trip.end(); ++it){
-            if (k == selection){
-                trip.erase(it);
-                break;
-            }
-            k++;
+void delete_goat (set<Goat> &trip, int selection){
+    // Remove a goat from the set
+    int k = 1;
+    for (auto it = trip.begin(); it != trip.end(); ++it){
+        if (k == selection){
+            trip.erase(it);
+            break;
         }
+        k++;
     }
 }
 
 // Function to select a goat by displaying the trip and getting valid user input
-// arguments: A list of <Goat> objects
+// arguments: A set of <Goat> objects
 // returns: returns a selection value entered by the user
-int select_goat (list <Goat> trip){ 
+int select_goat (set<Goat> trip){ 
     int selection;
     display_trip(trip);
     cout << "\tWhich goat is staying behind ? --> ";
